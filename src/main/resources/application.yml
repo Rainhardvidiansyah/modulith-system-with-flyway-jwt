@@ -1,0 +1,5 @@
+spring:
+ application:
+ name: rainhard-modulith
+ profiles:
+   active: dev
