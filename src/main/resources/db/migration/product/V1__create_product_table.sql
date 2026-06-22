@@ -1,5 +1,5 @@
 -- V1__create_product_table.sql
-CREATE TABLE product (
+CREATE TABLE products (
     id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
@@ -8,5 +8,5 @@ CREATE TABLE product (
     updated_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_product_ud ON product (id);
-CREATE INDEX idx_product_name ON product (name);
+CREATE INDEX idx_product_ud ON products (id);
+CREATE INDEX idx_product_name ON products (name);
