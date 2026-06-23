@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface ProductRepository {
     void saveProduct(ProductRequest productRequest);
-    Optional<ProductsEntity> getProductById(UUID id);
+    Optional<Product> getProductById(UUID id);
     String getProductByProductName(String productName);
     void deleteProductById(UUID id);
     void getProductBySku(String sku);
