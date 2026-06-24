@@ -1,0 +1,2 @@
+ALTER TABLE inventory DROP CONSTRAINT fk_inventory_product;
+ALTER TABLE inventory ALTER COLUMN id DROP DEFAULT;
