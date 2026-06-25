@@ -27,9 +27,10 @@ public class ProductController {
         this.productFacade = productFacade;
     }
 
-    @PostMapping("/create-product")
+    @PostMapping("/create")
     public ResponseEntity<@NonNull ProductResponse> createProduct(@RequestBody ProductRequest productRequest){
         var facadeSaveProduct = productFacade.saveProduct(productRequest);
+        LOGGER.info("this is get hit....");
         return ResponseEntity.status(HttpStatus.CREATED).body(facadeSaveProduct);
     }
 
