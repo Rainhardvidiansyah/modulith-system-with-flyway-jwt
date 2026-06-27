@@ -2,7 +2,7 @@
 
 ### Folder Structure:
 ````
-inventory/
+iinventory/
 ├── package-info.java
 ├── InventoryFacade.java
 ├── controller/
@@ -11,9 +11,10 @@ inventory/
 │   ├── InventoryRequest.java
 │   └── InventoryResponse.java
 └── internal/
-├── Inventory.java
-├── InventoryRepository.java
-└── InventoryService.java
+    ├── Inventory.java
+    ├── InventoryRepository.java
+    ├── InventoryService.java
+    └── InventoryListener.java
 ````
 ## Responsibility
 Manages stock levels per product per warehouse.
