@@ -2,7 +2,7 @@
 
 ### Folder Structure:
 ````
-iinventory/
+inventory/
 ├── package-info.java
 ├── InventoryFacade.java
 ├── controller/
@@ -63,3 +63,33 @@ Tracks available and reserved quantities.
 
 ## Dependencies
 - Depends on: `product` (event only, no direct import)
+
+## Implementing FIFO (First in First Out) in Inventory Module
+- Table Migration:
+````
+CREATE TABLE inventory_batch (
+    id UUID PRIMARY KEY,
+    inventory_id UUID NOT NULL,
+    batch_number VARCHAR(50) NOT NULL,
+    quantity INT NOT NULL DEFAULT 0,
+    received_date TIMESTAMP NOT NULL DEFAULT now(),
+    cost_price NUMERIC(12,2) NOT NULL,
+
+    CONSTRAINT uq_inventory_batch UNIQUE (inventory_id, batch_number)
+);
+
+CREATE INDEX idx_inventory_batch_inventory_id ON inventory_batch (inventory_id);
+CREATE INDEX idx_inventory_batch_received_date ON inventory_batch (received_date);
+
+````
+- Method to reduce the batch:
+````
+   // business method — FIFO: reduce the quantity for this batch
+    public void deduct(int amount) {
+        if (amount > this.quantity) {
+            throw new IllegalArgumentException("Insufficient batch quantity");
+        }
+        this.quantity -= amount;
+    }
+  ````
+  
