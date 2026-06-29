@@ -29,12 +29,13 @@ public class ProductService {
 
 
     @Transactional
-    public Product saveProduct(String name, String description, BigDecimal price){
+    public Product saveProduct(String name, String description, BigDecimal price, int quantityAvailable){
 
         var product = Product.create(name, description, price);
         var savedProduct = jpaProductRepository.save(product);
 
-        applicationEventPublisher.publishEvent(new ProductCreated(savedProduct.getId()));
+        applicationEventPublisher.publishEvent(new ProductCreated(savedProduct.getId(), quantityAvailable));
+
         LOGGER.info("ProductCreated [after] published: {}", savedProduct.getId());
 
         return savedProduct;
