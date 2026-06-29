@@ -20,6 +20,8 @@ public class InventoryListener {
     @ApplicationModuleListener
     public void saveCreatedProduct(ProductCreated created){
         LOGGER.info("ProductCreated received: {}", created.productId());
-        inventoryService.initStock(created.productId(), "wh-bandung", 100);
+        inventoryService.initStock(created.productId(), "wh-bandung", created.quantityAvailable());
     }
+
+    public void saveBatch(){}
 }
