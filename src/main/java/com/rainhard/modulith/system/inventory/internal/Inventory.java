@@ -76,6 +76,14 @@ public class Inventory {
         this.lastUpdated = Instant.now();
     }
 
+    public void restockProduct(int quantityAvailable){
+        if(quantityAvailable <= 0){
+            throw new IllegalStateException("Quantity cannot be less than 0 or equals 0");
+        }
+        this.quantityAvailable += quantityAvailable;
+        this.lastUpdated = Instant.now();
+    }
+
 
 
     public UUID getId() {
