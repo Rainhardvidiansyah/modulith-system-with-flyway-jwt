@@ -10,4 +10,7 @@ import java.util.UUID;
 public interface JpaInventoryBatchRepository extends JpaRepository<InventoryBatch, UUID> {
 
     List<InventoryBatch> findByInventoryIdAndQuantityGreaterThanOrderByReceivedAtAsc(UUID id, int quantity);
+
+    List<InventoryBatch> findInventoryBatchByInventoryId(UUID inventoryId);
+
 }
