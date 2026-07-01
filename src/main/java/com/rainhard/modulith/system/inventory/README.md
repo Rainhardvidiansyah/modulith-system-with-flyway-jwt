@@ -3,19 +3,27 @@
 ### Folder Structure:
 ````
 inventory/
-├── package-info.java
 ├── InventoryFacade.java
-├── controller/
-│   └── InventoryController.java
-├── dto/
-│   ├── InventoryRequest.java
-│   └── InventoryResponse.java
-└── internal/
+├── README.md
+├── controller
+│   └── InventoryController.java
+├── dto
+│   ├── InventoryInitStockRequest.java
+│   ├── InventoryRequestDeductStocks.java
+│   ├── InventoryRequestReleaseStock.java
+│   ├── InventoryRequestReverseStock.java
+│   └── InventoryResponse.java
+└── internal
     ├── Inventory.java
-    ├── InventoryRepository.java
+    ├── InventoryBatch.java
+    ├── InventoryListener.java
     ├── InventoryService.java
-    └── InventoryListener.java
+    ├── JdbcInventoryRepository.java
+    ├── JpaInventoryBatchRepository.java
+    └── JpaInventoryRepository.java
+
 ````
+
 ## Responsibility
 Manages stock levels per product per warehouse.
 Tracks available and reserved quantities.
