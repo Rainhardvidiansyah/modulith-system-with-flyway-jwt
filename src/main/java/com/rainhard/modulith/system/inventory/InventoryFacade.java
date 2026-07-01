@@ -4,10 +4,22 @@ import com.rainhard.modulith.system.inventory.dto.*;
 import com.rainhard.modulith.system.inventory.internal.InventoryService;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class InventoryFacade {
+
+    /*
+    findById(UUID id) -> OK
+    findAll() -> OK
+    findByProductId(UUID productId) -> OK
+    restock(UUID inventoryId, RestockRequest request)
+    findBatchesByInventoryId(UUID inventoryId)  ← optional
+     */
+
 
     private final InventoryService inventoryService;
 
@@ -15,36 +27,44 @@ public class InventoryFacade {
         this.inventoryService = inventoryService;
     }
 
+    //READ OPERATIONS ===
 
-    public InventoryResponse createInventory(InventoryInitStockRequest request){
-
-        var inventory = inventoryService.initStock(request.getProductId(),
-                request.getWarehouseCode(), request.getQuantity());
-
-        return InventoryResponse.from(inventory);
+    //Get Inventory By Inventory id
+    public Optional<InventoryResponse> getOneInventory(UUID inventoryId){
+        return inventoryService.getInventoryById(inventoryId)
+                .map(InventoryResponse::from);
     }
 
-    public InventoryResponse cancelStock(InventoryRequestReverseStock inventoryRequest){
-        var inventory = inventoryService.reserveStock(inventoryRequest.getInventoryId(),
-                inventoryRequest.getQuantity());
-        return InventoryResponse.from(inventory);
-    }
-
-    public InventoryResponse releaseStock(InventoryRequestReleaseStock releaseStock){
-        var inventory = inventoryService.releaseStock(releaseStock.getInventoryId(),
-                releaseStock.getQuantity());
-        return InventoryResponse.from(inventory);
-    }
-
-    public InventoryResponse deductStocks(InventoryRequestDeductStocks deductStocks){
-        var inventory = inventoryService.deductStock(deductStocks.getInventoryId(), deductStocks.getQuantity());
-        return InventoryResponse.from(inventory);
-    }
-
+    //Get All Inventory
     public List<InventoryResponse> getAllInventories(){
        return inventoryService.getAllInventories()
                .stream()
                .map(InventoryResponse::from)
                .toList();
     }
+
+    //Find Inventory by ProductId
+    public Optional<InventoryResponse> getInventoryByProductId(UUID productId){
+        return inventoryService.getInventoryByProductId(productId)
+                .map(InventoryResponse::from);
+    }
+
+
+    //Find batch by inventory id
+    public List<InventoryBatchResponse> findBatchesByInventoryId(UUID inventoryId){
+        return inventoryService.getInventoryBatchByInventoryId(inventoryId)
+                .stream()
+                .map(InventoryBatchResponse::from)
+                .toList();
+    }
+
+
+    // INSERT OPERATIONS ===
+
+    //Restock
+    public InventoryResponse restockInventory (UUID inventoryId, int quantity, BigDecimal costPrice){
+        var inventory = inventoryService.restock(inventoryId, quantity, costPrice);
+        return InventoryResponse.from(inventory);
+    }
+
 }
