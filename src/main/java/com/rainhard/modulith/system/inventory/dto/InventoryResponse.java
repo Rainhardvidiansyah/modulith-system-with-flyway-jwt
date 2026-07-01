@@ -5,14 +5,14 @@ import java.util.UUID;
 
 
 public record InventoryResponse (UUID inventoryId, UUID productId,
-                                 String warehouseCode, int quantityAvailable){
+                                 String warehouseCode, int quantityAvailable, int reservedQuantity){
 
 
     public static InventoryResponse from(Inventory inventory){
         Objects.requireNonNull(inventory, "Inventory cannot be null");
 
         return new InventoryResponse(inventory.getId(), inventory.getProductId(),
-                inventory.getWarehouseCode(), inventory.getQuantityAvailable());
+                inventory.getWarehouseCode(), inventory.getQuantityAvailable(), inventory.getReservedQuantity());
     }
 }
 
