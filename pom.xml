@@ -116,7 +116,16 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-	</dependencies>
+
+        <!--VALIDATOR-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+            <version>3.5.0</version>
+        </dependency>
+        <!--VALIDATOR-->
+
+    </dependencies>
 
 
 

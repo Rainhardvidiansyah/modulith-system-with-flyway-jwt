@@ -17,7 +17,8 @@ public class ProductFacade {
 
 
     public ProductResponse saveProduct(ProductRequest request){
-        var savedProduct = productService.saveProduct(request.name(), request.description(), request.price());
+        var savedProduct = productService.saveProduct(request.name(), request.description(),
+                request.price(), request.quantityAvailable());
         return ProductResponse.from(savedProduct);
     }
 

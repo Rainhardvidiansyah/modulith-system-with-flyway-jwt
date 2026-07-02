@@ -1,8 +1,10 @@
 package com.rainhard.modulith.system.product.internal;
+import com.rainhard.modulith.system.product.ProductCreated;
 import com.rainhard.modulith.system.product.dto.ProductResponse;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,17 +18,27 @@ public class ProductService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductService.class);
 
     private final JpaProductRepository jpaProductRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
 
-    public ProductService(JpaProductRepository jpaProductRepository) {
+    ProductService(JpaProductRepository jpaProductRepository,
+                   ApplicationEventPublisher applicationEventPublisher) {
         this.jpaProductRepository = jpaProductRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
 
     @Transactional
-    public Product saveProduct(String name, String description, BigDecimal price){
+    public Product saveProduct(String name, String description, BigDecimal price, int quantityAvailable){
+
         var product = Product.create(name, description, price);
-        return jpaProductRepository.save(product);
+        var savedProduct = jpaProductRepository.save(product);
+
+        applicationEventPublisher.publishEvent(new ProductCreated(savedProduct.getId(), quantityAvailable));
+
+        LOGGER.info("ProductCreated [after] published: {}", savedProduct.getId());
+
+        return savedProduct;
     }
 
     public List<ProductResponse> findAllProducts(){
