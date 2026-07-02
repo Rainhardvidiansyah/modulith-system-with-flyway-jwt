@@ -87,12 +87,13 @@ public class InventoryController {
     }
 
 
-    //Restock
-    //TODO: FINISH RESTOCK METHOD
-    @PostMapping("/{uuid}/restock")
-    public ResponseEntity<ApiResponse<InventoryResponse>> restockInventory(@PathVariable("uuid") UUID uuid,
+    //RESTOCK Data
+    @PostMapping("/{inventoryId}/restock")
+    public ResponseEntity<ApiResponse<InventoryResponse>> restockInventory(@PathVariable("inventoryId") UUID inventoryId,
                                                                            @RequestBody InventoryRestockRequest restockRequest){
-        var restockData = inventoryFacade.restockInventory(uuid, restockRequest.getQuantity(), restockRequest.getCostPrice());
+        LOGGER.info("Restock method is hit");
+        var restockData = inventoryFacade.restockInventory(inventoryId, restockRequest.getQuantity(), restockRequest.getCostPrice());
+        LOGGER.info("Data for restock: {}", restockData);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success("Restock is success", restockData));
     }
 
