@@ -29,7 +29,7 @@ import lombok.Getter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-// Entitas controls data and its own behaviour (Rich)
+// Entity controls data and its own behaviour (Rich)
 @Entity
 @Getter // Only Getter, with no setter
 public class User {
@@ -49,7 +49,7 @@ public class User {
     public void changeEmail(String newEmail) {
         // Validate business rule (invariant)
         if (newEmail == null || !newEmail.contains("@")) {
-            throw new IllegalArgumentException("Format email tidak valid");
+            throw new IllegalArgumentException("Email format not valid");
         }
         this.email = newEmail;
     }
@@ -67,7 +67,7 @@ public class UserService {
     @Transactional
     public void updateUserEmail(Long userId, String newEmail) {
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("User tidak ditemukan"));
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         // Service delegates tasks to domain entity 
         user.changeEmail(newEmail); 
@@ -77,4 +77,47 @@ public class UserService {
 }
 ```
 
-## TO BE CONTINUED...
+## Configuration - application.yml
+
+```
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/<table_name>
+    username: your_database_name
+    password: your_database_password
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+    locations:
+     - classpath:db/migration/global
+     - classpath:db/migration/product
+     - classpath:db/migration/inventory
+  jpa:
+    hibernate:
+      ddl-auto: none
+  modulith:
+    runtime:
+      flyway-enabled: true
+    events:
+        jdbc:
+          schema-initialization:
+            enabled: true
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resource:
+      add-mappings: false
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
+
+server:
+ servlet:
+  context-path: /api/v1
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - [ReqID: %X{requestId}] - %msg%n"
+
+```
+
+## To Be Continued
