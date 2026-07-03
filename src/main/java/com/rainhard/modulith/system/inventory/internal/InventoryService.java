@@ -47,7 +47,7 @@ public class InventoryService {
     //Restock: same inventory id with different quantity and date
     public Inventory restock(UUID inventoryId, int quantity, BigDecimal costPrice){
         var inventory = inventoryRepository.findById(inventoryId)
-                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+                .orElseThrow();
 
         var newBatch = InventoryBatch.create(inventory.getId(), GenerateBatchNumber.batchNumber(), quantity, costPrice);
         batchRepository.save(newBatch);
@@ -60,7 +60,7 @@ public class InventoryService {
     @Transactional
     public Inventory reserveStock(UUID inventoryId, int quantity) {
         var inventory = inventoryRepository.findById(inventoryId)
-                .orElseThrow(() -> new IllegalArgumentException("Inventory not found"));
+                .orElseThrow();
         inventory.reserve(quantity);
         return inventoryRepository.save(inventory);
     }
@@ -69,7 +69,7 @@ public class InventoryService {
     @Transactional
     public Inventory releaseStock(UUID inventoryId, int quantity) {
         var inventory = inventoryRepository.findById(inventoryId)
-                .orElseThrow(() -> new IllegalArgumentException("Inventory not found"));
+                .orElseThrow();
         inventory.release(quantity);
         return inventoryRepository.save(inventory);
     }
@@ -84,7 +84,7 @@ public class InventoryService {
     @Transactional
     public Inventory deductStock(UUID inventoryId, int quantity) {
         var inventory = inventoryRepository.findById(inventoryId)
-                .orElseThrow(() -> new IllegalArgumentException("Inventory not found"));
+                .orElseThrow();
 
         var batches = batchRepository.findByInventoryIdAndQuantityGreaterThanOrderByReceivedAtAsc(inventoryId, quantity);
         int unfulfilled = quantity;
