@@ -1,6 +1,8 @@
 package com.rainhard.modulith.system;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,12 +16,14 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandling {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandling.class);
 
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse<Void>> handleResourceNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
         String message = ex.getMessage();
-        System.out.println(">>> GlobalExceptionHandler tangkap: " + ex.getMessage());
+
+        LOGGER.info("Message in handleResourceNotFound Method: {}", message);
         return build(HttpStatus.NOT_FOUND, request, "DATA_NOT_FOUND", message);
     }
 
@@ -43,8 +47,11 @@ public class GlobalExceptionHandling {
 
     private ResponseEntity<ApiResponse<Void>> build(HttpStatus status, HttpServletRequest request,
                                                     String code, String message) {
+
+        String requestId = (String) request.getAttribute("requestId");
+
         return ResponseEntity.status(status).body(
-                ApiResponse.<Void>error(status.value(), request.getRequestURI(), code, message)
+                ApiResponse.<Void>error(requestId, status.value(), request.getRequestURI(), code, message)
         );
     }
 }
