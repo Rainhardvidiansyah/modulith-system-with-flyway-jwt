@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -21,8 +22,9 @@ public class RequestFilter extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestFilter.class);
 
     public static final String REQUEST_ID_HEADER = "X-Request-ID";
+    private static final String MDC_KEY = "requestId";
 
-    private static final InheritableThreadLocal<String> currentRequestId = new InheritableThreadLocal<>();
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -39,20 +41,18 @@ public class RequestFilter extends OncePerRequestFilter {
             requestId = UUID.randomUUID().toString();
         }
 
-        currentRequestId.set(requestId);
-
-        LOGGER.info("Current request id: {}", currentRequestId.get());
-
-
         request.setAttribute("requestId", requestId);
+
         response.setHeader(REQUEST_ID_HEADER, requestId);
 
-        try{
+        MDC.put(MDC_KEY, requestId);
+
+        try {
             filterChain.doFilter(request, response);
         }finally {
-            currentRequestId.remove();
-
+            MDC.clear();
         }
+
     }
 
     @Override
@@ -61,9 +61,7 @@ public class RequestFilter extends OncePerRequestFilter {
     }
 
 
-    public static String getStringId(){
-        return currentRequestId.get();
-    }
+
 
 
 }
