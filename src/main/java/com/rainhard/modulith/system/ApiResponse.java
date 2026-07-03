@@ -19,9 +19,6 @@ public class ApiResponse<T> {
     private ErrorDetail error;
 
 
-
-    //TODO: implement metadata and pagination
-
     @Getter
     @Builder
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -41,11 +38,10 @@ public class ApiResponse<T> {
     }
 
 
-    public static <T> ApiResponse<T> success(int status, String path, String message, T data){
-        System.out.println("Di sukses: " + RequestFilter.getStringId());
+    public static <T> ApiResponse<T> success(String requestId, int status, String path, String message, T data){
         return ApiResponse.<T>builder()
                 .metadata(Metadata.builder()
-                        .requestId(RequestFilter.getStringId())
+                        .requestId(requestId)
                         .timestamp(Instant.now())
                         .status(status)
                         .path(path)
@@ -55,11 +51,10 @@ public class ApiResponse<T> {
                 .build();
     }
 
-    public static <T> ApiResponse<T> error(int status, String path, String code, String message) {
-        System.out.println("Di error: " + RequestFilter.getStringId());
+    public static <T> ApiResponse<T> error(String requestId, int status, String path, String code, String message) {
         return ApiResponse.<T>builder()
                 .metadata(Metadata.builder()
-                        .requestId(RequestFilter.getStringId())
+                        .requestId(requestId)
                         .timestamp(Instant.now())
                         .status(status)
                         .path(path)
@@ -71,3 +66,5 @@ public class ApiResponse<T> {
     }
 
 }
+
+//TODO: implement metadata and pagination
