@@ -1,0 +1,1 @@
+ALTER TABLE orders ADD COLUMN expired_at TIMESTAMP;
