@@ -5,11 +5,13 @@ import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @Entity
 @Table(name = "orders")
 public class Order {
+
 
     @Id
     @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
@@ -32,14 +34,18 @@ public class Order {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    @Column(name = "expired_at")
+    private Instant expiredAt;
+
     //Factory method:
-    public static Order create(UUID userId, OrderStatus orderStatus, BigDecimal totalAmount){
+    public static Order create(UUID userId, BigDecimal totalAmount, int expiryHours){
         var order = new Order();
         order.userId = userId;
         order.status = OrderStatus.PENDING;
         order.totalAmount = totalAmount;
         order.createdAt = Instant.now();
         order.updatedAt = Instant.now();
+        order.expiredAt = Instant.now().plus(expiryHours, ChronoUnit.HOURS);
         return order;
     }
 
