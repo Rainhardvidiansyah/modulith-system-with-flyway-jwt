@@ -1,4 +1,8 @@
 package com.rainhard.modulith.system.order.dto;
 
-public class OrderItemRequest {
-}
+
+
+import java.util.UUID;
+
+
+public record OrderItemRequest(UUID productId, int quantity) {}
