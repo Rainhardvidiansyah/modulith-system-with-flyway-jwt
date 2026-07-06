@@ -42,10 +42,8 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getOneProduct(@PathVariable("id") UUID id){
-        return productFacade.findProductById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ProductResponse getOneProduct(@PathVariable("id") UUID id){
+        return productFacade.findProductById(id);
     }
 
 }
