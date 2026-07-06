@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -47,9 +48,9 @@ public class ProductService {
                 .toList();
     }
 
-    public Optional<ProductResponse> findProductById(UUID id){
-        return jpaProductRepository.findById(id)
-                .map(ProductResponse::from);
+
+    public Optional<Product> getProductById(UUID id){
+        return jpaProductRepository.findById(id);
     }
 
 
