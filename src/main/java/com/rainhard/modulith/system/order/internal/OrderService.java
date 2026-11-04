@@ -166,11 +166,16 @@ public class OrderService {
         return new OrderResult(savedOrder, orderItems);
     }
 
+
+
     public OrderResult findOrderById(){
 
         return null;
     }
 
+
+    //TODO: Pay the order and validate whether the payment is successful
+    //TODO: user look at order detail
 
 
 }
