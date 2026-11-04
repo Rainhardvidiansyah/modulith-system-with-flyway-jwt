@@ -1,6 +1,9 @@
 package com.rainhard.modulith.system.inventory.internal;
 
 
+import com.rainhard.modulith.system.ResourceNotFoundException;
+import com.rainhard.modulith.system.order.OrderCanceled;
+import com.rainhard.modulith.system.order.OrderPlaced;
 import com.rainhard.modulith.system.product.ProductCreated;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,4 +27,50 @@ public class InventoryListener {
     }
 
     public void saveBatch(){}
+
+
+    @ApplicationModuleListener
+    public void orderCreated(OrderPlaced event){
+        LOGGER.info("Order created received: {}", event);
+
+        event.items().forEach(
+                item -> {
+                    var inventory = inventoryService.getInventoryByProductId(item.productId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Product id not found"));
+                inventoryService.reserveStock(inventory.getId(), item.quantity());
+                });
+    }
+
+    @ApplicationModuleListener
+    public void onExpiredOrder(OrderCanceled event){
+        LOGGER.info("Expired order received: {}", event.orderId());
+        event.canceledItem().forEach(
+                item -> {
+                    var inventory = inventoryService.getInventoryByProductId(item.productId())
+                                    .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+                    inventoryService.releaseStock(inventory.getId(), item.quantity());
+                }
+        );
+    }
+
+
+    @ApplicationModuleListener
+    public void onCancelingOrderByCustomer(OrderCanceled event){
+
+        LOGGER.info("onCancelingOrderByCustomer: {}", event.orderId());
+
+        event.canceledItem().forEach(
+                item -> {
+                    var inventory = inventoryService.getInventoryByProductId(item.productId())
+                                    .orElseThrow();
+
+                    inventoryService.releaseStock(inventory.getId(), item.quantity());
+
+                }
+        );
+    }
+
+
+
+
 }

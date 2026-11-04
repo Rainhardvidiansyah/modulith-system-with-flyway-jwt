@@ -1,4 +1,5 @@
 package com.rainhard.modulith.system.product;
+import com.rainhard.modulith.system.ResourceNotFoundException;
 import com.rainhard.modulith.system.product.dto.ProductRequest;
 import com.rainhard.modulith.system.product.dto.ProductResponse;
 import com.rainhard.modulith.system.product.internal.ProductService;
@@ -26,8 +27,10 @@ public class ProductFacade {
         return productService.findAllProducts();
     }
 
-    public Optional<ProductResponse> findProductById(UUID id){
-        return productService.findProductById(id);
+    public ProductResponse findProductById(UUID id){
+        return productService.getProductById(id)
+                .map(ProductResponse::from)
+                .orElseThrow(() -> new ResourceNotFoundException("Product with id: " + id + " not found"));
     }
 
 
